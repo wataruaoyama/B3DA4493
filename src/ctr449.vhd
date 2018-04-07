@@ -47,7 +47,7 @@ component attcnt
 			Q : OUT std_logic_vector(7 downto 0));
 end component;
 
-component detect_fs
+component detect_ov96k
 	PORT(
 			XDSD : in std_logic;
 			MCLK : in std_logic;
@@ -72,7 +72,7 @@ begin
 								
 	A1 : attcnt port map (CLK => CLK_10M,RESET_N => reset,A => PHA, B => PHB,Q => att);
 	
-	D1 : detect_fs port map (XDSD => xdsd,MCLK => isck,LRCK => ilrck,CLK_SEL => clk_sel,OV96K => ov96k );
+	D1 : detect_ov96k port map (XDSD => xdsd,MCLK => isck,LRCK => ilrck,CLK_SEL => clk_sel,OV96K => ov96k );
 	
 	ilrck <= LRCK0 when XDSD = '1' else LRCK_DSDR;
 	LRCK <= ilrck;
@@ -85,9 +85,9 @@ begin
 	LED_DSD <= XDSD when RESET = '1' else '1';
 	LED_PCM <= not XDSD when RESET = '1' else '1';
 	LED_96K <= not ov96k when RESET = '1' else '1';
+--	LED_96K <= '1';
 	
 	MUTE <= 'Z' when (RESET and DZFR and not MUTE_IN) = '1' else '0';
---	MUTE <= 'Z' when RESET = '1' else '0';
 	PDN <= RESET;
 
 end RTL;
